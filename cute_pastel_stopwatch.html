@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MY TIMER - 碼錶計時器</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for cute rounded typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+    
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              pastelPink: '#FFB7B2',
+              pastelHeader: '#FF9EAA',
+              pastelBg: '#FFFDF0',
+              pastelYellow: '#FFD966',
+              pastelYellowDark: '#F4B400',
+              pastelGreen: '#7AD7A8',
+              pastelGreenHover: '#65C494',
+              pastelBlue: '#74B9FF',
+              pastelBlueHover: '#0984E3',
+              darkTeal: '#1A3644',
+            },
+            fontFamily: {
+              fredoka: ['Fredoka', 'sans-serif'],
+              nunito: ['Nunito', 'sans-serif'],
+            }
+          }
+        }
+      }
+    </script>
+    
+    <style>
+      body {
+        background-color: #FEECE2;
+        font-family: 'Fredoka', 'Nunito', sans-serif;
+      }
+
+      /* Custom SVG Progress Ring styling */
+      .progress-ring-circle {
+        transition: stroke-dashoffset 0.05s linear;
+        transform: rotate(-90deg);
+        transform-origin: 50% 50%;
+      }
+
+      /* Soft button press dynamic state */
+      .btn-cute {
+        transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 6px 0px rgba(0,0,0,0.08);
+      }
+      .btn-cute:active:not(:disabled) {
+        transform: translateY(3px);
+        box-shadow: 0 3px 0px rgba(0,0,0,0.08);
+      }
+      .btn-cute:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+        box-shadow: none;
+      }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <!-- Timer Main Card -->
+    <div class="w-full max-w-sm sm:max-w-md bg-pastelBg rounded-3xl shadow-xl border-4 border-white/60 overflow-hidden flex flex-col items-center pb-8 select-none">
+        
+        <!-- Header Banner -->
+        <div class="w-full bg-pastelHeader pt-5 pb-4 flex justify-center items-center shadow-sm">
+            <div class="bg-white/90 backdrop-blur-sm px-6 py-1.5 rounded-full border-2 border-white/80 shadow-inner">
+                <span class="text-pastelHeader font-bold tracking-wider text-lg uppercase flex items-center gap-1.5">
+                    <span class="inline-block w-2 h-2 rounded-full bg-pastelHeader"></span>
+                    MY TIMER
+                    <span class="inline-block w-2 h-2 rounded-full bg-pastelHeader"></span>
+                </span>
+            </div>
+        </div>
+
+        <!-- Timer Circle Container -->
+        <div class="relative w-64 h-64 sm:w-72 sm:h-72 my-8 flex items-center justify-center">
+            
+            <!-- SVG Progress Circle -->
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 200 200">
+                <!-- Outer Light Yellow Accent Layer (No Shadow) -->
+                <circle
+                    cx="100"
+                    cy="100"
+                    r="90"
+                    stroke="#FFF4C2"
+                    stroke-width="12"
+                    fill="transparent"
+                />
+                <!-- Cute White Little Dash / Pill Accents on Outer Light Yellow Layer -->
+                <circle
+                    cx="100"
+                    cy="100"
+                    r="90"
+                    stroke="#FFFFFF"
+                    stroke-width="4"
+                    stroke-linecap="round"
+                    stroke-dasharray="6 35 12 45 8 30"
+                    fill="transparent"
+                    opacity="0.9"
+                />
+
+                <!-- Inner Track background (Middle Light Yellow Ring) -->
+                <circle
+                    cx="100"
+                    cy="100"
+                    r="76"
+                    stroke="#FFEAA7"
+                    stroke-width="14"
+                    fill="transparent"
+                    opacity="0.5"
+                />
+                <!-- Animated Active Progress Ring -->
+                <circle
+                    id="progress-circle"
+                    class="progress-ring-circle"
+                    cx="100"
+                    cy="100"
+                    r="76"
+                    stroke="#FFD966"
+                    stroke-width="14"
+                    stroke-linecap="round"
+                    fill="transparent"
+                    stroke-dasharray="477.52"
+                    stroke-dashoffset="0"
+                />
+            </svg>
+
+            <!-- Digits Display Inside Circle -->
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-darkTeal">
+                <!-- Main Time (HH:MM:SS or MM:SS) -->
+                <div id="main-time" class="text-3xl sm:text-4xl font-extrabold tracking-tight font-nunito leading-none">
+                    00:00:00
+                </div>
+                <!-- Milliseconds -->
+                <div id="sub-time" class="text-xl sm:text-2xl font-bold tracking-wider opacity-90 mt-2 font-nunito leading-none">
+                    000
+                </div>
+            </div>
+        </div>
+
+        <!-- Control Buttons Container -->
+        <div class="flex items-center justify-center gap-4 sm:gap-6 w-full px-6">
+            
+            <!-- Start / Pause / Continue Button -->
+            <button 
+                id="btn-primary" 
+                class="btn-cute flex-1 bg-pastelGreen hover:bg-pastelGreenHover text-white font-extrabold text-xl py-3.5 px-6 rounded-full tracking-wider transition-colors duration-200">
+                開始
+            </button>
+
+            <!-- Reset Button -->
+            <button 
+                id="btn-reset" 
+                disabled
+                class="btn-cute flex-1 bg-pastelBlue hover:bg-pastelBlueHover text-white font-extrabold text-xl py-3.5 px-6 rounded-full tracking-wider transition-colors duration-200">
+                重設
+            </button>
+            
+        </div>
+
+    </div>
+
+    <!-- Application Logic -->
+    <script>
+        // DOM Elements
+        const mainTimeEl = document.getElementById('main-time');
+        const subTimeEl = document.getElementById('sub-time');
+        const btnPrimary = document.getElementById('btn-primary');
+        const btnReset = document.getElementById('btn-reset');
+        const progressCircle = document.getElementById('progress-circle');
+
+        // State Machine Variables
+        // States: 'IDLE' | 'RUNNING' | 'PAUSED'
+        let state = 'IDLE'; 
+        
+        let startTime = 0;
+        let elapsedTime = 0;
+        let timerAnimationId = null;
+
+        // SVG Circle Parameters (Radius = 76)
+        const circleRadius = 76;
+        const circumference = 2 * Math.PI * circleRadius; // ~477.52
+        progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
+
+        /**
+         * Format elapsed milliseconds into structured digits
+         */
+        function formatTime(ms) {
+            const hours = Math.floor(ms / (1000 * 60 * 60));
+            const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((ms % (1000 * 60)) / 1000);
+            const milliseconds = Math.floor(ms % 1000);
+
+            const pad2 = (n) => String(n).padStart(2, '0');
+            const pad3 = (n) => String(n).padStart(3, '0');
+
+            return {
+                main: `${pad2(hours)}:${pad2(minutes)}:${pad2(seconds)}`,
+                sub: pad3(milliseconds)
+            };
+        }
+
+        /**
+         * Update the display elements and dynamic circle offset
+         */
+        function updateDisplay() {
+            const now = performance.now();
+            const totalMs = elapsedTime + (state === 'RUNNING' ? (now - startTime) : 0);
+            
+            const timeFormatted = formatTime(totalMs);
+            mainTimeEl.textContent = timeFormatted.main;
+            subTimeEl.textContent = timeFormatted.sub;
+
+            // Animate progress circle (revolves every 60 seconds)
+            const secondsProgress = (totalMs % 60000) / 60000;
+            const strokeOffset = circumference - (secondsProgress * circumference);
+            progressCircle.style.strokeDashoffset = strokeOffset;
+
+            if (state === 'RUNNING') {
+                timerAnimationId = requestAnimationFrame(updateDisplay);
+            }
+        }
+
+        /**
+         * Handle Primary Button Click (開始 / 暫停 / 繼續)
+         */
+        btnPrimary.addEventListener('click', () => {
+            if (state === 'IDLE') {
+                // IDLE -> RUNNING
+                state = 'RUNNING';
+                startTime = performance.now();
+                
+                btnPrimary.textContent = '暫停';
+                btnPrimary.classList.remove('bg-pastelGreen', 'hover:bg-pastelGreenHover');
+                btnPrimary.classList.add('bg-pastelGreen', 'hover:bg-pastelGreenHover'); // keeps mint green aesthetic
+                
+                btnReset.disabled = false;
+                
+                requestAnimationFrame(updateDisplay);
+
+            } else if (state === 'RUNNING') {
+                // RUNNING -> PAUSED
+                state = 'PAUSED';
+                elapsedTime += performance.now() - startTime;
+                cancelAnimationFrame(timerAnimationId);
+                
+                btnPrimary.textContent = '繼續';
+
+            } else if (state === 'PAUSED') {
+                // PAUSED -> RUNNING
+                state = 'RUNNING';
+                startTime = performance.now();
+                
+                btnPrimary.textContent = '暫停';
+                
+                requestAnimationFrame(updateDisplay);
+            }
+        });
+
+        /**
+         * Handle Reset Button Click (重設)
+         */
+        btnReset.addEventListener('click', () => {
+            // Any State -> IDLE
+            state = 'IDLE';
+            cancelAnimationFrame(timerAnimationId);
+            
+            elapsedTime = 0;
+            startTime = 0;
+            
+            // Reset Displays
+            mainTimeEl.textContent = '00:00:00';
+            subTimeEl.textContent = '000';
+            progressCircle.style.strokeDashoffset = 0;
+
+            // Reset Buttons State
+            btnPrimary.textContent = '開始';
+            btnReset.disabled = true;
+        });
+    </script>
+</body>
+</html>
