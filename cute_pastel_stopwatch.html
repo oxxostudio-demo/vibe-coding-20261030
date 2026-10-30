@@ -67,16 +67,33 @@
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
 
+    <!-- Hidden SVG Symbols Definition -->
+    <svg xmlns="http://www.w3.org/2000/svg" class="hidden">
+        <symbol id="icon-solve" viewBox="0 0 32 32">
+            <path d="M28 12v4h-4v6h-6v4h-4v-4h-6v-6h-4v-4h4v-6h6v4h4v-4h6v6h4z"></path>
+        </symbol>
+        <symbol id="icon-gitlab" viewBox="0 0 24 24">
+            <path d="M23.238 15.199c0.261-0.17 0.493-0.446 0.635-0.764 0.172-0.385 0.214-0.831 0.075-1.305l-1.266-3.749-2.432-7.484c-0.068-0.229-0.195-0.443-0.397-0.637-0.266-0.242-0.603-0.367-0.941-0.372-0.351-0.005-0.707 0.119-0.976 0.365-0.165 0.147-0.296 0.334-0.378 0.547-0.006 0.015-0.012 0.033-0.018 0.052l-2.217 6.818h-6.647l-2.207-6.773c-0.068-0.229-0.195-0.443-0.397-0.637-0.265-0.242-0.602-0.367-0.94-0.372-0.351-0.006-0.707 0.118-0.976 0.365-0.166 0.146-0.296 0.334-0.379 0.546-0.006 0.016-0.012 0.034-0.018 0.052l-2.441 7.512-1.22 3.78c-0.106 0.329-0.117 0.676-0.038 1.004 0.098 0.407 0.336 0.783 0.702 1.052l10.65 7.74c0.346 0.248 0.818 0.26 1.176 0zM22.003 13.624l-10.003 7.27-9.983-7.255 1.205-3.662 1.886-5.805 1.891 5.808c0.137 0.42 0.525 0.687 0.951 0.69h8.1c0.442 0 0.817-0.287 0.951-0.691l1.886-5.804 1.892 5.824z"></path>
+        </symbol>
+        <symbol id="icon-sunrise" viewBox="0 0 24 24">
+            <path d="M18 18c0-1.657-0.673-3.158-1.757-4.243s-2.586-1.757-4.243-1.757-3.158 0.673-4.243 1.757-1.757 2.586-1.757 4.243c0 0.552 0.448 1 1 1s1-0.448 1-1c0-1.105 0.447-2.103 1.172-2.828s1.723-1.172 2.828-1.172 2.103 0.447 2.828 1.172 1.172 1.723 1.172 2.828c0 0.552 0.448 1 1 1s1-0.448 1-1zM3.513 10.927l1.42 1.42c0.391 0.391 1.024 0.391 1.414 0s0.391-1.024 0-1.414l-1.42-1.42c-0.391-0.391-1.024-0.391-1.414 0s-0.391 1.024 0 1.414zM1 19h2c0.552 0 1-0.448 1-1s-0.448-1-1-1h-2c-0.552 0-1 0.448-1 1s0.448 1 1 1zM21 19h2c0.552 0 1-0.448 1-1s-0.448-1-1-1h-2c-0.552 0-1 0.448-1 1s0.448 1 1 1zM19.067 12.347l1.42-1.42c0.391-0.391 0.391-1.024 0-1.414s-1.024-0.391-1.414 0l-1.42 1.42c-0.391 0.391-0.391 1.024 0 1.414s1.024 0.391 1.414 0zM23 21h-22c-0.552 0-1 0.448-1 1s0.448 1 1 1h22c0.552 0 1-0.448 1-1s-0.448-1-1-1zM8.707 6.707l2.293-2.293v4.586c0 0.552 0.448 1 1 1s1-0.448 1-1v-4.586l2.293 2.293c0.391 0.391 1.024 0.391 1.414 0s0.391-1.024 0-1.414l-4-4c-0.092-0.092-0.202-0.166-0.324-0.217-0.245-0.101-0.521-0.101-0.766 0-0.118 0.049-0.228 0.121-0.324 0.217l-4 4c-0.391 0.391-0.391 1.024 0 1.414s1.024 0.391 1.414 0z"></path>
+        </symbol>
+    </svg>
+
     <!-- Timer Main Card -->
     <div class="w-full max-w-sm sm:max-w-md bg-pastelBg rounded-3xl shadow-xl border-4 border-white/60 overflow-hidden flex flex-col items-center pb-8 select-none">
         
         <!-- Header Banner -->
         <div class="w-full bg-pastelHeader pt-5 pb-4 flex justify-center items-center shadow-sm">
             <div class="bg-white/90 backdrop-blur-sm px-6 py-1.5 rounded-full border-2 border-white/80 shadow-inner">
-                <span class="text-pastelHeader font-bold tracking-wider text-lg uppercase flex items-center gap-1.5">
-                    <span class="inline-block w-2 h-2 rounded-full bg-pastelHeader"></span>
+                <span class="text-pastelHeader font-bold tracking-wider text-lg uppercase flex items-center gap-2">
+                    <svg class="w-4 h-4 fill-current flex-shrink-0" aria-hidden="true">
+                        <use href="#icon-solve"/>
+                    </svg>
                     MY TIMER
-                    <span class="inline-block w-2 h-2 rounded-full bg-pastelHeader"></span>
+                    <svg class="w-4 h-4 fill-current flex-shrink-0" aria-hidden="true">
+                        <use href="#icon-solve"/>
+                    </svg>
                 </span>
             </div>
         </div>
@@ -136,7 +153,7 @@
 
             <!-- Digits Display Inside Circle -->
             <div class="absolute inset-0 flex flex-col items-center justify-center text-darkTeal">
-                <!-- Main Time (HH:MM:SS or MM:SS) -->
+                <!-- Main Time (HH:MM:SS) -->
                 <div id="main-time" class="text-3xl sm:text-4xl font-extrabold tracking-tight font-nunito leading-none">
                     00:00:00
                 </div>
@@ -150,19 +167,25 @@
         <!-- Control Buttons Container -->
         <div class="flex items-center justify-center gap-4 sm:gap-6 w-full px-6">
             
-            <!-- Start / Pause / Continue Button -->
+            <!-- Start / Pause / Continue Button with gitlab icon -->
             <button 
                 id="btn-primary" 
-                class="btn-cute flex-1 bg-pastelGreen hover:bg-pastelGreenHover text-white font-extrabold text-xl py-3.5 px-6 rounded-full tracking-wider transition-colors duration-200">
-                開始
+                class="btn-cute flex-1 flex items-center justify-center gap-2 bg-pastelGreen hover:bg-pastelGreenHover text-white font-extrabold text-xl py-3.5 px-6 rounded-full tracking-wider transition-colors duration-200">
+                <svg class="w-5 h-5 flex-shrink-0 fill-current" aria-hidden="true">
+                    <use href="#icon-gitlab"/>
+                </svg>
+                <span id="btn-primary-text">開始</span>
             </button>
 
-            <!-- Reset Button -->
+            <!-- Reset Button with sunrise icon -->
             <button 
                 id="btn-reset" 
                 disabled
-                class="btn-cute flex-1 bg-pastelBlue hover:bg-pastelBlueHover text-white font-extrabold text-xl py-3.5 px-6 rounded-full tracking-wider transition-colors duration-200">
-                重設
+                class="btn-cute flex-1 flex items-center justify-center gap-2 bg-pastelBlue hover:bg-pastelBlueHover text-white font-extrabold text-xl py-3.5 px-6 rounded-full tracking-wider transition-colors duration-200">
+                <svg class="w-5 h-5 flex-shrink-0 fill-current" aria-hidden="true">
+                    <use href="#icon-sunrise"/>
+                </svg>
+                <span>重設</span>
             </button>
             
         </div>
@@ -175,6 +198,7 @@
         const mainTimeEl = document.getElementById('main-time');
         const subTimeEl = document.getElementById('sub-time');
         const btnPrimary = document.getElementById('btn-primary');
+        const btnPrimaryText = document.getElementById('btn-primary-text');
         const btnReset = document.getElementById('btn-reset');
         const progressCircle = document.getElementById('progress-circle');
 
@@ -239,10 +263,7 @@
                 state = 'RUNNING';
                 startTime = performance.now();
                 
-                btnPrimary.textContent = '暫停';
-                btnPrimary.classList.remove('bg-pastelGreen', 'hover:bg-pastelGreenHover');
-                btnPrimary.classList.add('bg-pastelGreen', 'hover:bg-pastelGreenHover'); // keeps mint green aesthetic
-                
+                btnPrimaryText.textContent = '暫停';
                 btnReset.disabled = false;
                 
                 requestAnimationFrame(updateDisplay);
@@ -253,14 +274,14 @@
                 elapsedTime += performance.now() - startTime;
                 cancelAnimationFrame(timerAnimationId);
                 
-                btnPrimary.textContent = '繼續';
+                btnPrimaryText.textContent = '繼續';
 
             } else if (state === 'PAUSED') {
                 // PAUSED -> RUNNING
                 state = 'RUNNING';
                 startTime = performance.now();
                 
-                btnPrimary.textContent = '暫停';
+                btnPrimaryText.textContent = '暫停';
                 
                 requestAnimationFrame(updateDisplay);
             }
@@ -283,7 +304,7 @@
             progressCircle.style.strokeDashoffset = 0;
 
             // Reset Buttons State
-            btnPrimary.textContent = '開始';
+            btnPrimaryText.textContent = '開始';
             btnReset.disabled = true;
         });
     </script>
