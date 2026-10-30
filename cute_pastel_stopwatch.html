@@ -69,7 +69,7 @@
 <body class="min-h-screen flex items-center justify-center p-4">
 
     <!-- Hidden SVG Symbols Definition -->
-    <svg xmlns="http://www.w3.org/2000/svg" class="hidden">
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;" aria-hidden="true">
         <symbol id="icon-solve" viewBox="0 0 32 32">
             <path d="M28 12v4h-4v6h-6v4h-4v-4h-6v-6h-4v-4h4v-6h6v4h4v-4h6v6h4z"></path>
         </symbol>
@@ -186,7 +186,7 @@
                 <svg class="w-5 h-5 flex-shrink-0 fill-current" aria-hidden="true">
                     <use href="#icon-sunrise"/>
                 </svg>
-                <span>RESET</span>
+                <span id="btn-reset-text">RESET</span>
             </button>
             
         </div>
@@ -238,8 +238,10 @@
          * Update the display elements and dynamic circle offset
          */
         function updateDisplay() {
+            if (state !== 'RUNNING') return;
+
             const now = performance.now();
-            const totalMs = elapsedTime + (state === 'RUNNING' ? (now - startTime) : 0);
+            const totalMs = elapsedTime + (now - startTime);
             
             const timeFormatted = formatTime(totalMs);
             mainTimeEl.textContent = timeFormatted.main;
@@ -250,43 +252,8 @@
             const strokeOffset = circumference - (secondsProgress * circumference);
             progressCircle.style.strokeDashoffset = strokeOffset;
 
-            if (state === 'RUNNING') {
-                timerAnimationId = requestAnimationFrame(updateDisplay);
-            }
+            timerAnimationId = requestAnimationFrame(updateDisplay);
         }
-
-        /**
-         * Handle Primary Button Click (開始 / 暫停 / 繼續)
-         */
-        btnPrimary.addEventListener('click', () => {
-            if (state === 'IDLE') {
-                // IDLE -> RUNNING
-                state = 'RUNNING';
-                startTime = performance.now();
-                
-                btnPrimaryText.textContent = '暫停';
-                btnReset.disabled = false;
-                
-                requestAnimationFrame(updateDisplay);
-
-            } else if (state === 'RUNNING') {
-                // RUNNING -> PAUSED
-                state = 'PAUSED';
-                elapsedTime += performance.now() - startTime;
-                cancelAnimationFrame(timerAnimationId);
-                
-                btnPrimaryText.textContent = '繼續';
-
-            } else if (state === 'PAUSED') {
-                // PAUSED -> RUNNING
-                state = 'RUNNING';
-                startTime = performance.now();
-                
-                btnPrimaryText.textContent = '暫停';
-                
-                requestAnimationFrame(updateDisplay);
-            }
-        });
 
         /**
          * Handle Primary Button Click (START / PAUSE / RESUME)
@@ -296,28 +263,26 @@
                 // IDLE -> RUNNING
                 state = 'RUNNING';
                 startTime = performance.now();
-                
                 btnPrimaryText.textContent = 'PAUSE';
                 btnReset.disabled = false;
-                
-                requestAnimationFrame(updateDisplay);
+                timerAnimationId = requestAnimationFrame(updateDisplay);
 
             } else if (state === 'RUNNING') {
                 // RUNNING -> PAUSED
                 state = 'PAUSED';
                 elapsedTime += performance.now() - startTime;
-                cancelAnimationFrame(timerAnimationId);
-                
+                if (timerAnimationId) {
+                    cancelAnimationFrame(timerAnimationId);
+                    timerAnimationId = null;
+                }
                 btnPrimaryText.textContent = 'RESUME';
 
             } else if (state === 'PAUSED') {
                 // PAUSED -> RUNNING
                 state = 'RUNNING';
                 startTime = performance.now();
-                
                 btnPrimaryText.textContent = 'PAUSE';
-                
-                requestAnimationFrame(updateDisplay);
+                timerAnimationId = requestAnimationFrame(updateDisplay);
             }
         });
 
@@ -327,7 +292,10 @@
         btnReset.addEventListener('click', () => {
             // Any State -> IDLE
             state = 'IDLE';
-            cancelAnimationFrame(timerAnimationId);
+            if (timerAnimationId) {
+                cancelAnimationFrame(timerAnimationId);
+                timerAnimationId = null;
+            }
             
             elapsedTime = 0;
             startTime = 0;
