@@ -9,7 +9,7 @@
     <!-- Google Fonts for cute rounded typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cherry+Bomb+One&family=Fredoka:wght@400;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
     
     <script>
       tailwind.config = {
@@ -30,6 +30,7 @@
             fontFamily: {
               fredoka: ['Fredoka', 'sans-serif'],
               nunito: ['Nunito', 'sans-serif'],
+              cherry: ['"Cherry Bomb One"', 'cursive'],
             }
           }
         }
@@ -86,7 +87,7 @@
         <!-- Header Banner -->
         <div class="w-full bg-pastelHeader pt-5 pb-4 flex justify-center items-center shadow-sm">
             <div class="bg-white/90 backdrop-blur-sm px-6 py-1.5 rounded-full border-2 border-white/80 shadow-inner">
-                <span class="text-pastelHeader font-bold tracking-wider text-lg uppercase flex items-center gap-2">
+                <span class="text-pastelHeader font-cherry tracking-wider text-xl uppercase flex items-center gap-2">
                     <svg class="w-4 h-4 fill-current flex-shrink-0" aria-hidden="true">
                         <use href="#icon-solve"/>
                     </svg>
@@ -165,27 +166,27 @@
         </div>
 
         <!-- Control Buttons Container -->
-        <div class="flex items-center justify-center gap-4 sm:gap-6 w-full px-6">
+        <div class="flex items-center justify-center gap-4 sm:gap-6 w-full px-6 font-cherry">
             
-            <!-- Start / Pause / Continue Button with gitlab icon -->
+            <!-- Start / Pause / Resume Button with gitlab icon -->
             <button 
                 id="btn-primary" 
-                class="btn-cute flex-1 flex items-center justify-center gap-2 bg-pastelGreen hover:bg-pastelGreenHover text-white font-extrabold text-xl py-3.5 px-6 rounded-full tracking-wider transition-colors duration-200">
+                class="btn-cute flex-1 flex items-center justify-center gap-2 bg-pastelGreen hover:bg-pastelGreenHover text-white text-xl sm:text-2xl py-3 px-5 rounded-full tracking-wider transition-colors duration-200">
                 <svg class="w-5 h-5 flex-shrink-0 fill-current" aria-hidden="true">
                     <use href="#icon-gitlab"/>
                 </svg>
-                <span id="btn-primary-text">開始</span>
+                <span id="btn-primary-text">START</span>
             </button>
 
             <!-- Reset Button with sunrise icon -->
             <button 
                 id="btn-reset" 
                 disabled
-                class="btn-cute flex-1 flex items-center justify-center gap-2 bg-pastelBlue hover:bg-pastelBlueHover text-white font-extrabold text-xl py-3.5 px-6 rounded-full tracking-wider transition-colors duration-200">
+                class="btn-cute flex-1 flex items-center justify-center gap-2 bg-pastelBlue hover:bg-pastelBlueHover text-white text-xl sm:text-2xl py-3 px-5 rounded-full tracking-wider transition-colors duration-200">
                 <svg class="w-5 h-5 flex-shrink-0 fill-current" aria-hidden="true">
                     <use href="#icon-sunrise"/>
                 </svg>
-                <span>重設</span>
+                <span>RESET</span>
             </button>
             
         </div>
@@ -288,7 +289,40 @@
         });
 
         /**
-         * Handle Reset Button Click (重設)
+         * Handle Primary Button Click (START / PAUSE / RESUME)
+         */
+        btnPrimary.addEventListener('click', () => {
+            if (state === 'IDLE') {
+                // IDLE -> RUNNING
+                state = 'RUNNING';
+                startTime = performance.now();
+                
+                btnPrimaryText.textContent = 'PAUSE';
+                btnReset.disabled = false;
+                
+                requestAnimationFrame(updateDisplay);
+
+            } else if (state === 'RUNNING') {
+                // RUNNING -> PAUSED
+                state = 'PAUSED';
+                elapsedTime += performance.now() - startTime;
+                cancelAnimationFrame(timerAnimationId);
+                
+                btnPrimaryText.textContent = 'RESUME';
+
+            } else if (state === 'PAUSED') {
+                // PAUSED -> RUNNING
+                state = 'RUNNING';
+                startTime = performance.now();
+                
+                btnPrimaryText.textContent = 'PAUSE';
+                
+                requestAnimationFrame(updateDisplay);
+            }
+        });
+
+        /**
+         * Handle Reset Button Click (RESET)
          */
         btnReset.addEventListener('click', () => {
             // Any State -> IDLE
@@ -304,7 +338,7 @@
             progressCircle.style.strokeDashoffset = 0;
 
             // Reset Buttons State
-            btnPrimaryText.textContent = '開始';
+            btnPrimaryText.textContent = 'START';
             btnReset.disabled = true;
         });
     </script>
